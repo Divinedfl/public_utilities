@@ -28,115 +28,119 @@ local Camera = workspace.CurrentCamera
 local RunService: RunService = cloneref(game:GetService("RunService"))
 local UserInputService: UserInputService = cloneref(game:GetService("UserInputService"))
 local Fly = {
-    IsFlyEnabled = false,
-    BodyGyro = nil,
-    BodyVelocity = nil,
-    Connection = nil,
-    FlySpeed = 30,
-    SpaceShiftEnabled = true,
-    ShouldPlatformStand = false
+	IsFlyEnabled = false,
+	BodyGyro = nil,
+	BodyVelocity = nil,
+	Connection = nil,
+	FlySpeed = 30,
+	SpaceShiftEnabled = true,
+	ShouldPlatformStand = false,
 }
 local Toggling, Setting = false, false
 function Fly:Start()
-    if self.IsFlyEnabled and (not Toggling and not Setting) then
-        return
-    end
+	if self.IsFlyEnabled and (not Toggling and not Setting) then
+		return
+	end
 
-   self.IsFlyEnabled = true
+	self.IsFlyEnabled = true
 
-   self.BodyGyro = Instance.new("BodyGyro", HRP)
-   self.BodyVelocity = Instance.new("BodyVelocity", HRP)
-   self.BodyGyro.P = 9e4
-   self.BodyGyro.MaxTorque = Vector3.one * 9e9
-   self.BodyGyro.CFrame = Camera.CFrame
-   self.BodyVelocity.Velocity = Vector3.zero
-   self.BodyVelocity.MaxForce = Vector3.one * 9e9
+	self.BodyGyro = Instance.new("BodyGyro", HRP)
+	self.BodyVelocity = Instance.new("BodyVelocity", HRP)
+	self.BodyGyro.P = 9e4
+	self.BodyGyro.MaxTorque = Vector3.one * 9e9
+	self.BodyGyro.CFrame = Camera.CFrame
+	self.BodyVelocity.Velocity = Vector3.zero
+	self.BodyVelocity.MaxForce = Vector3.one * 9e9
 
-   self.Connection = RunService.RenderStepped:Connect(function()
-        if not self.IsFlyEnabled then
-            self.Connection:Disconnect()
-        end
+	self.Connection = RunService.RenderStepped:Connect(function()
+		if not self.IsFlyEnabled then
+			self.Connection:Disconnect()
+		end
 
-        if self.ShouldPlatformStand then
-            char.Humanoid.PlatformStand = true
-        end
-            local direction = Vector3.new(0, 0, 0)
+		if self.ShouldPlatformStand then
+			char.Humanoid.PlatformStand = true
+		end
+		local direction = Vector3.new(0, 0, 0)
 
-    if not UserInputService:GetFocusedTextBox() then
-        if UserInputService:IsKeyDown(Enum.KeyCode.W) then
-            direction += (Camera.CFrame.LookVector * self.FlySpeed)
-        end
-        
-        if UserInputService:IsKeyDown(Enum.KeyCode.S) then
-            direction -= (Camera.CFrame.LookVector * self.FlySpeed)
-        end
-        
-        if UserInputService:IsKeyDown(Enum.KeyCode.A) then
-            direction -= (Camera.CFrame.RightVector * self.FlySpeed)
-        end
-        
-        if UserInputService:IsKeyDown(Enum.KeyCode.D) then
-            direction += (Camera.CFrame.RightVector * self.FlySpeed)
-        end
-        
-        if UserInputService:IsKeyDown(Enum.KeyCode.LeftShift) and self.SpaceShiftEnabled then
-            direction -= (Camera.CFrame.UpVector * self.FlySpeed)
-        end
-        
-        if UserInputService:IsKeyDown(Enum.KeyCode.Space) and self.SpaceShiftEnabled then
-            direction += (Camera.CFrame.UpVector * self.FlySpeed)
-        end
-    end
+		if not UserInputService:GetFocusedTextBox() then
+			if UserInputService:IsKeyDown(Enum.KeyCode.W) then
+				direction += (Camera.CFrame.LookVector * self.FlySpeed)
+			end
 
-           self.BodyVelocity.Velocity = direction
-           self.BodyGyro.CFrame = Camera.CFrame
-    end)
+			if UserInputService:IsKeyDown(Enum.KeyCode.S) then
+				direction -= (Camera.CFrame.LookVector * self.FlySpeed)
+			end
+
+			if UserInputService:IsKeyDown(Enum.KeyCode.A) then
+				direction -= (Camera.CFrame.RightVector * self.FlySpeed)
+			end
+
+			if UserInputService:IsKeyDown(Enum.KeyCode.D) then
+				direction += (Camera.CFrame.RightVector * self.FlySpeed)
+			end
+
+			if UserInputService:IsKeyDown(Enum.KeyCode.LeftShift) and self.SpaceShiftEnabled then
+				direction -= (Camera.CFrame.UpVector * self.FlySpeed)
+			end
+
+			if UserInputService:IsKeyDown(Enum.KeyCode.Space) and self.SpaceShiftEnabled then
+				direction += (Camera.CFrame.UpVector * self.FlySpeed)
+			end
+		end
+
+		self.BodyVelocity.Velocity = direction
+		self.BodyGyro.CFrame = Camera.CFrame
+	end)
 end
 
 function Fly:Stop()
-   self.IsFlyEnabled = false
+	self.IsFlyEnabled = false
 
-    if self.Connection then
-       self.Connection:Disconnect()
-    end
+	if self.Connection then
+		self.Connection:Disconnect()
+	end
 
-    if self.BodyGyro then
-       self.BodyGyro:Destroy()
-       self.BodyGyro = nil
-    end
+	if self.BodyGyro then
+		self.BodyGyro:Destroy()
+		self.BodyGyro = nil
+	end
 
-    if self.BodyVelocity then
-       self.BodyVelocity:Destroy()
-       self.BodyVelocity = nil
-    end
+	if self.BodyVelocity then
+		self.BodyVelocity:Destroy()
+		self.BodyVelocity = nil
+	end
 
-    if self.ShouldPlatformStand then
-        char.Humanoid.PlatformStand = false
-    end
+	if self.ShouldPlatformStand then
+		char.Humanoid.PlatformStand = false
+	end
 end
 
 function Fly:Toggle()
-    self.IsFlyEnabled = not self.IsFlyEnabled
-    Toggling = true
+	self.IsFlyEnabled = not self.IsFlyEnabled
+	Toggling = true
 
-    if self.IsFlyEnabled then
-        Fly:Start()
-    else
-        Fly:Stop()
-    end
+	if self.IsFlyEnabled then
+		Fly:Start()
+	else
+		Fly:Stop()
+	end
 
-    Toggling = false
+	Toggling = false
 end
 
 function Fly:Set(value: boolean)
-   self.IsFlyEnabled = value
-   Setting = true
-    if value then
-        Fly:Start()
-    else
-        Fly:Stop()
-    end
-    Setting = false
+	self.IsFlyEnabled = value
+	Setting = true
+	if value then
+		Fly:Start()
+	else
+		Fly:Stop()
+	end
+	Setting = false
 end
 print("[Divined's Fly]: Loaded successfully!")
+if not getgenv().Divined then
+	getgenv().Divined = {} -- I plan on making more public utilities
+end
+getgenv().Divined.Fly = Fly
 return Fly
