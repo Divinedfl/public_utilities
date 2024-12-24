@@ -21,6 +21,10 @@
    The good scripts with Fly generally use MoveVector, I was too lazy to do that. This is a side-project I made for a private GUI.
 ]]
 
+if getgenv().Divined and getgenv().Divined.Fly then
+     return getgenv().Divined.Fly
+end
+
 local LocalPlayer = game.Players.LocalPlayer
 local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
 local HRP = char:WaitForChild("HumanoidRootPart", math.huge)
