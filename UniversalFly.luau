@@ -25,12 +25,13 @@ if getgenv().Divined and getgenv().Divined.Fly then
      return getgenv().Divined.Fly
 end
 
-local LocalPlayer = game.Players.LocalPlayer
+local Players: Players = cloneref(game:GetService("Players"))
+local RunService: RunService = cloneref(game:GetService("RunService"))
+local UserInputService: UserInputService = cloneref(game:GetService("UserInputService"))
+local LocalPlayer = Players.LocalPlayer
 local char = LocalPlayer.Character or LocalPlayer.CharacterAdded:Wait()
 local HRP = char:WaitForChild("HumanoidRootPart", math.huge)
 local Camera = workspace.CurrentCamera
-local RunService: RunService = cloneref(game:GetService("RunService"))
-local UserInputService: UserInputService = cloneref(game:GetService("UserInputService"))
 local Fly = {
 	IsFlyEnabled = false,
 	BodyGyro = nil,
